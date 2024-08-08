@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+      body {
+        font-family: Poppins;
+        background-color: black;
+        color: #eee;
+        margin: 0;
+        font-size: 12px;
+      }
+      a {
+        text-decoration: none;
+        color: #eee;
+      }
+      header {
+        width: 1140px;
+        max-width: 80%;
+        margin: auto;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        z-index: 100;
+      }
+      header a {
+        margin-right: 40px;
+      }
+      .carousal {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        margin-top: -50px;
+        position: relative;
+      }
+      .carousal .list .item {
+        position: absolute;
+        inset: 0 0 0 0;
+      }
+      .carousal .list .item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .carousal .list .item .content {
+        position: absolute;
+        top: 20%;
+        width: 1140px;
+        max-width: 80%;
+        left: 50%;
+        transform: translateX(-50%);
+        padding-right: 30%;
+        box-sizing: border-box;
+        color: #fff;
+        text-shadow: 0 5px 10px #0004;
+      }
+      .carousal .list .item .content .name {
+        font-weight: bold;
+        letter-spacing: 5px;
+      }
+      .carousal .list .item .content .type,
+      .carousal .list .item .content .price {
+        font-weight: bold;
+        font-size: 5em;
+        list-style: 1.3em;
+      }
+      .carousal .list .item .content .des {
+        font-weight: bold;
+        font-size: 1em;
+      }
+      .carousal .list .item .content .price {
+        color: #f1683a;
+      }
+      .carousal .list .item .content .buttons{
+        display: grid;
+        grid-template-columns: repeat(2, 130px);
+        grid-template-rows: 40px;
+        gap: 5px;
+        margin-top: 20px;
+      }
+      .carousal .list .item .content button {
+        border: none;
+        background-color: #eee;
+        letter-spacing: 3px;
+        font-family: Poppins;
+        font-weight: 500;
+      }
+      .carousal .list .item .content button:nth-child(2) {
+        background-color: transparent;
+        color: #eee;
+        border: 1px solid #eee;
+      }
+      /* thumbnail */
+      .thumbnail {
+        position: absolute;
+        bottom: 40px;
+        left: 55%;
+        width: max-content;
+        z-index: 100;
+        display: flex;
+        gap: 20px;
+      }
+      .thumbnail .item {
+        width: 150px;
+        height: 220px;
+        flex-shrink: 0;
+        position: relative;
+      }
+      .thumbnail .item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 20px;
+      }
+      .thumbnail .item .content {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+      }
+      .thumbnail .item .content .title {
+        font-weight: bold;
+      }
+      /* arrows */
+      .arrows {
+        position: absolute;
+        top: 80%;
+        right: 58%;
+        width: 300px;
+        max-width: 30%;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .arrows button {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #eee4;
+        border: none;
+        font-family: monospace;
+        color: black;
+        font-weight: bold;
+        font-size: large;
+        transition: 0.5s;
+        z-index: 100;
+        border: 3px solid black;
+      }
+      .arrows button:hover {
+        background-color: white;
+        color: black;
+      }
+      .carousal .list .item:nth-child(1) {
+        z-index: 1;
+      }
+      .carousal .list .item:nth-child(1) .name,
+      .carousal .list .item:nth-child(1) .type,
+      .carousal .list .item:nth-child(1) .price,
+      .carousal .list .item:nth-child(1) .des,
+      .carousal .list .item:nth-child(1) .buttons {
+        transform: translateY(50px);
+        filter: blur(20px);
+        opacity: 0;
+        animation: showContent 0.5s 1s linear 1 forwards;
+      }
+      @keyframes showContent {
+        to {
+          opacity: 1;
+          filter: blur(0);
+          transform: translateY(0);
+        }
+      }
+      .carousal .list .item:nth-child(1) .type {
+        animation-delay: 1.3s;
+      }
+      .carousal .list .item:nth-child(1) .price {
+        animation-delay: 1.4s;
+      }
+      .carousal .list .item:nth-child(1) .des {
+        animation-delay: 1.6s;
+      }
+      .carousal .list .item:nth-child(1) .buttons {
+        animation-delay: 1.8s;
+      }
+      .carousal.next .list .item:nth-child(1) img {
+        width: 150px;
+        height: 220px;
+        position: absolute;
+        left: 50%;
+        bottom: 50px;
+        border-radius: 20px;
+        animation: showImage 0.5s linear 1 forwards;
+      }
+      @keyframes showImage {
+        to {
+          width: 100%;
+          height: 100%;
+          left: 0;
+          bottom: 0;
+          border-radius: 0;
+        }
+      }
+
+      .carousal.next .thumbnail .item:nth-child(1) {
+        width: 0;
+        overflow: hidden;
+        animation: showThumbnail 0.5s linear 1 forwards;
+      }
+      @keyframes showThumbnail {
+        to {
+          width: 150px;
+        }
+      }
+      .carousal.next .thumbnail {
+        transform: translateX(150px);
+        animation: transformThumbnail 0.5s linear 1 forwards;
+      }
+      @keyframes transformThumbnail {
+        to {
+          transform: translateX(0);
+        }
+      }
+      /* effect prev click */
+      .carousal.prev .list .item:nth-child(2) {
+        z-index: 2;
+      }
+      .carousal.prev .list .item:nth-child(2) img {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        animation: outImage 0.5s linear 1 forwards;
+      }
+      @keyframes outImage {
+        to {
+          width: 150px;
+          height: 220px;
+          border-radius: 20px;
+          left: 55%;
+          bottom: 40px;
+        }
+      }
+      .carousal.prev .thumbnail .item:nth-child(1) {
+        width: 0;
+        overflow: hidden;
+        opacity: 0;
+        animation: showThumbnail 0.5s linear 1 forwards;
+      }
+
+      .carousal.prev .list .item:nth-child(2) .name,
+      .carousal.prev .list .item:nth-child(2) .type,
+      .carousal.prev .list .item:nth-child(2) .price,
+      .carousal.prev .list .item:nth-child(2) .des,
+      .carousal.prev .list .item:nth-child(2) .buttons {
+        animation: contentOut 1.5s linear 1 forwards;
+      }
+      @keyframes contentOut {
+        to {
+          transform: translateY(-150px);
+          filter: blur(20px);
+          opacity: 0;
+        }
+      }
+      .carousal.next .arrows button,
+      .carousal.prev .arrows button {
+        pointer-events: none;
+      }
+      /* time */
+      .time {
+        width: 0;
+        height: 5px;
+        background-color: #f1683a;
+        position: absolute;
+        z-index: 100;
+        top: 0;
+        left: 0;
+      }
+      .carousal.next .time,
+      .carousal.prev .time {
+        width: 100%;
+        animation: timeRunning 2s linear 1 forwards;
+      }
+      @keyframes timeRunning {
+        to {
+          width: 0;
+        }
+      }
+      @media screen and (max-width: 678px) {
+        .carousal .list .item .content {
+          padding-right: 0;
+        }
+        .carousal .list .item .content .title {
+          font-size: 30px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header></header>
+    <div class="carousal">
+      <div class="list">
+        <div class="item">
+          <img src="/media/myapp/images/img7.png" />
+          <div class="content">
+            <div class="name">LANDMARK</div>
+            <div class="type">Sydney Opera House</div>
+            <div class="price">Medium</div>
+            <div class="des">
+              The Sydney Opera House, designed by Jørn Utzon, is renowned for
+              its sail-like roofs and stunning harbor views. Opened in 1973,
+              it’s a UNESCO World Heritage Site, hosting diverse performances.
+            </div>
+            <form method="post" action="{% url 'taken' %}">
+              {% csrf_token %}
+              <input type="hidden" name="id" value="7" />
+              <button type="submit" class="buttons" style="width: auto; display: inline-block; color: white; background-color: blue; height: 35px;">TAKE THIS IMAGE?</button>
+            </form>
+          </div>
+        </div>
+        <!-- dont use upperimage or div -->
+        <div class="item">
+          <img src="/media/myapp/images/img8.png" />
+          <div class="content">
+            <div class="name">Campus</div>
+            <div class="type">Apple Park</div>
+            <div class="price">Easy</div>
+            <div class="des">
+              Apple Park is Apple's 175-acre corporate campus in Cupertino,
+              California, featuring a futuristic, circular design by Norman
+              Foster. It integrates nature with technology and serves as a hub
+              for innovation and collaboration.
+            </div>
+            <form method="post" action="{% url 'taken' %}">
+              {% csrf_token %}
+              <input type="hidden" name="id" value="8" />
+              <button type="submit" class="buttons" style="width: auto; display: inline-block; color: white; background-color: blue; height: 35px;">TAKE THIS IMAGE?</button>
+            </form>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img9.png" />
+          <div class="content">
+            <div class="name">Monument</div>
+            <div class="type">Taj Mahal</div>
+            <div class="price">Easy</div>
+            <div class="des">
+              Taj Mahal is a stunning white marble mausoleum in Agra, India,
+              built by Emperor Shah Jahan in memory of his wife Mumtaz Mahal.
+              Its intricate design and gardens make it a symbol of eternal love.
+            </div>
+            <form method="post" action="{% url 'taken' %}">
+              {% csrf_token %}
+              <input type="hidden" name="id" value="9" />
+              <button type="submit" class="buttons" style="width: auto; display: inline-block; color: white; background-color: blue; height: 35px;">TAKE THIS IMAGE?</button>
+            </form>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img10.png" />
+          <div class="content">
+            <div class="name">Heritage</div>
+            <div class="type">Bhaktapur</div>
+            <div class="price">Hard</div>
+            <div class="des">
+              Bhaktapur is an ancient city in Nepal, renowned for its
+              well-preserved medieval architecture, including temples, palaces,
+              and traditional squares. Its rich cultural heritage and intricate
+              woodwork make it a historical gem.
+            </div>
+            <form method="post" action="{% url 'taken' %}">
+              {% csrf_token %}
+              <input type="hidden" name="id" value="10" />
+              <button type="submit" class="buttons" style="width: auto; display: inline-block; color: white; background-color: blue; height: 35px;">TAKE THIS IMAGE?</button>
+            </form>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img11.png" />
+          <div class="content">
+            <div class="name">Archaeological</div>
+            <div class="type">Petra</div>
+            <div class="price">Medium</div>
+            <div class="des">
+              Petra is a historic city in Jordan, renowned for its rock-cut
+              architecture and ancient tombs, including the iconic Treasury and
+              Monastery. It’s a UNESCO World Heritage Site and a symbol of
+              ancient ingenuity.
+            </div>
+            <form method="post" action="{% url 'taken' %}">
+              {% csrf_token %}
+              <input type="hidden" name="id" value="11" />
+              <button type="submit" class="buttons" style="width: auto; display: inline-block; color: white; background-color: blue; height: 35px;">TAKE THIS IMAGE?</button>
+            </form>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img12.png" />
+          <div class="content">
+            <div class="name">Ruins</div>
+            <div class="type">Machu Picchu</div>
+            <div class="price">Easy</div>
+            <div class="des">
+              Machu Picchu is a 15th-century Incan citadel in Peru, set high in
+              the Andes Mountains. Renowned for its well-preserved ruins and
+              panoramic views, it’s a UNESCO World Heritage Site and a marvel of
+              ancient engineering.
+            </div>
+            <form method="post" action="{% url 'taken' %}">
+              {% csrf_token %}
+              <input type="hidden" name="id" value="12" />
+              <button type="submit" class="buttons" style="width: auto; display: inline-block; color: white; background-color: blue; height: 35px;">TAKE THIS IMAGE?</button>
+            </form>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img13.png" />
+          <div class="content">
+            <div class="name">Landmark</div>
+            <div class="type">The Leaning Tower of Pisa</div>
+            <div class="price">Hard</div>
+            <div class="des">
+              The Leaning Tower of Pisa is a freestanding bell tower in Italy,
+              famous for its unintended tilt. Built in the 12th century, it is a
+              renowned architectural wonder and a symbol of medieval
+              engineering.
+            </div>
+            <form method="post" action="{% url 'taken' %}">
+              {% csrf_token %}
+              <input type="hidden" name="id" value="13" />
+              <button type="submit" class="buttons" style="width: auto; display: inline-block; color: white; background-color: blue; height: 35px;">TAKE THIS IMAGE?</button>
+            </form>
+          </div>
+        </div>
+        <!-- use below -->
+        <div class="item">
+          <img src="/media/myapp/images/img14.png" />
+          <div class="content">
+            <div class="name">Praying</div>
+            <div class="type">Monk Praying</div>
+            <div class="price">Medium</div>
+            <div class="des">
+              Monk in Temple Praying: A serene scene of a monk engaged in prayer
+              within a tranquil temple, surrounded by intricate decorations and
+              spiritual ambiance, reflecting deep reverence and inner peace.
+            </div>
+            <form method="post" action="{% url 'taken' %}">
+              {% csrf_token %}
+              <input type="hidden" name="id" value="14" />
+              <button type="submit" class="buttons" style="width: auto; display: inline-block; color: white; background-color: blue; height: 35px;">TAKE THIS IMAGE?</button>
+            </form>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img15.png" />
+          <div class="content">
+            <div class="name">Cetacean</div>
+            <div class="type">Humpback Whale</div>
+            <div class="price">Easy</div>
+            <div class="des">
+              Humpback Whale: The humpback whale is known for its distinctive
+              body shape, long pectoral fins, and acrobatic breaches. Its
+              complex songs and graceful movements make it a marvel of marine
+              life.
+            </div>
+            <form method="post" action="{% url 'taken' %}">
+              {% csrf_token %}
+              <input type="hidden" name="id" value="15" />
+              <button type="submit" class="buttons" style="width: auto; display: inline-block; color: white; background-color: blue; height: 35px;">TAKE THIS IMAGE?</button>
+            </form>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img16.png" />
+          <div class="content">
+            <div class="name">Outdoors</div>
+            <div class="type">Camping</div>
+            <div class="price">Medium</div>
+            <div class="des">
+              Camping involves staying in tents or other temporary shelters
+              outdoors, typically in natural settings like forests or mountains.
+              It offers a chance to connect with nature and enjoy activities
+              like hiking and stargazing.
+            </div>
+            <form method="post" action="{% url 'taken' %}">
+              {% csrf_token %}
+              <input type="hidden" name="id" value="16" />
+              <button type="submit" class="buttons" style="width: auto; display: inline-block; color: white; background-color: blue; height: 35px;">TAKE THIS IMAGE?</button>
+            </form>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img1.png" />
+          <div class="content">
+            <div class="name">Scenery</div>
+            <div class="type">Eco Haven</div>
+            <div class="price">Hard</div>
+            <div class="des">
+              A vibrant jungle landscape illuminated by a golden sunrise,
+              featuring a cascading waterfall surrounded by dense, lush foliage
+              and vibrant flora, creating a serene and magical atmosphere.
+            </div>
+            <form method="post" action="{% url 'taken' %}">
+              {% csrf_token %}
+              <input type="hidden" name="id" value="1" />
+              <button type="submit" class="buttons" style="width: auto; display: inline-block; color: white; background-color: blue; height: 35px;">TAKE THIS IMAGE?</button>
+            </form>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img2.png" />
+          <div class="content">
+            <div class="name">Scenery</div>
+            <div class="type">Wheat Field at Sunset</div>
+            <div class="price">Hard</div>
+            <div class="des">
+              A picturesque scene of golden wheat fields under a vibrant sunset,
+              with the warm, soft light casting long shadows and highlighting
+              the rippling grain, evoking a sense of peace and harvest
+              abundance.
+            </div>
+            <form method="post" action="{% url 'taken' %}">
+              {% csrf_token %}
+              <input type="hidden" name="id" value="2" />
+              <button type="submit" class="buttons" style="width: auto; display: inline-block; color: white; background-color: blue; height: 35px;">TAKE THIS IMAGE?</button>
+            </form>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img3.png" />
+          <div class="content">
+            <div class="name">Landform</div>
+            <div class="type">Bell Rock</div>
+            <div class="price">Medium</div>
+            <div class="des">
+              Bell Rock: A striking geological formation in Sedona, Arizona,
+              known for its bell-like shape and vibrant red hue. It’s a popular
+              spot for hiking and offers breathtaking views of the surrounding
+              desert landscape.
+            </div>
+            <form method="post" action="{% url 'taken' %}">
+              {% csrf_token %}
+              <input type="hidden" name="id" value="3" />
+              <button type="submit" class="buttons" style="width: auto; display: inline-block; color: white; background-color: blue; height: 35px;">TAKE THIS IMAGE?</button>
+            </form>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img4.png" />
+          <div class="content">
+            <div class="name">Seaside</div>
+            <div class="type">The Ligurian coast</div>
+            <div class="price">Hard</div>
+            <div class="des">
+              The Ligurian Coast: A scenic Mediterranean coastline in northwest
+              Italy, known for its rugged cliffs, charming seaside villages, and
+              crystal-clear waters. The area offers stunning coastal views and a
+              mix of historic and picturesque landscapes.
+            </div>
+            <form method="post" action="{% url 'taken' %}">
+              {% csrf_token %}
+              <input type="hidden" name="id" value="4" />
+              <button type="submit" class="buttons" style="width: auto; display: inline-block; color: white; background-color: blue; height: 35px;">TAKE THIS IMAGE?</button>
+            </form>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img5.png" />
+          <div class="content">
+            <div class="name">Temple</div>
+            <div class="type">Tran Quoc Pagoda</div>
+            <div class="price">Hard</div>
+            <div class="des">
+              Tran Quoc Pagoda: An ancient Buddhist temple in Hanoi, Vietnam,
+              renowned for its historic architecture and serene setting by West
+              Lake. Its striking red pagoda and lush gardens reflect traditional
+              Vietnamese spirituality and design.
+            </div>
+            <form method="post" action="{% url 'taken' %}">
+              {% csrf_token %}
+              <input type="hidden" name="id" value="5" />
+              <button type="submit" class="buttons" style="width: auto; display: inline-block; color: white; background-color: blue; height: 35px;">TAKE THIS IMAGE?</button>
+            </form>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img6.png" />
+          <div class="content">
+            <div class="name">Cathedral</div>
+            <div class="type">Cathédrale Notre-Dame</div>
+            <div class="price">Medium</div>
+            <div class="des">
+              Cathédrale Notre-Dame de Paris: A Gothic masterpiece located on
+              Île de la Cité in Paris, renowned for its stunning architecture,
+              intricate sculptures, and iconic flying buttresses. It is a symbol
+              of French cultural heritage and history.
+            </div>
+            <form method="post" action="{% url 'taken' %}">
+              {% csrf_token %}
+              <input type="hidden" name="id" value="6" />
+              <button type="submit" class="buttons" style="width: auto; display: inline-block; color: white; background-color: blue; height: 35px;">TAKE THIS IMAGE?</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="thumbnail">
+        <div class="item">
+          <img src="/media/myapp/images/img8.png" />
+          <div class="content">
+            <div class="title">Campus</div>
+            <div class="des">Apple Park</div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img9.png" />
+          <div class="content">
+            <div class="title">Monument</div>
+            <div class="des">Taj Mahal</div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img10.png" />
+          <div class="content">
+            <div class="title">Heritage</div>
+            <div class="des">Bhaktapur</div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img11.png" />
+          <div class="content">
+            <div class="title">Archaeological</div>
+            <div class="des">Petra</div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img12.png" />
+          <div class="content">
+            <div class="title">Ruins</div>
+            <div class="des">Machu Picchu</div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img13.png" />
+          <div class="content">
+            <div class="title">Landmark</div>
+            <div class="des">Leaning Tower of Pisa</div>
+          </div>
+        </div>
+        <!-- use below -->
+        <div class="item">
+          <img src="/media/myapp/images/img14.png" />
+          <div class="content">
+            <div class="title">Praying</div>
+            <div class="des">monk Praying</div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img15.png" />
+          <div class="content">
+            <div class="title">Cetacean</div>
+            <div class="des">Humpback Whale</div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img16.png" />
+          <div class="content">
+            <div class="title">Outdoors</div>
+            <div class="des">Camping</div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img1.png" />
+          <div class="content">
+            <div class="title">Scenery</div>
+            <div class="des">Eco Haven</div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img2.png" />
+          <div class="content">
+            <div class="title">Scenery</div>
+            <div class="des">Wheat Field at Sunset</div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img3.png" />
+          <div class="content">
+            <div class="title">Landform</div>
+            <div class="des">Bell Rock</div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img4.png" />
+          <div class="content">
+            <div class="title">Seaside</div>
+            <div class="des">The Ligurian coast</div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img5.png" />
+          <div class="content">
+            <div class="title">Temple</div>
+            <div class="des">Tran Quoc Pagoda</div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="/media/myapp/images/img6.png" />
+          <div class="content">
+            <div class="title">Cathedral</div>
+            <div class="des">Cathédrale Notre-Dame</div>
+          </div>
+        </div>
+        <!-- dont use  below-->
+        <div class="item">
+          <img src="/media/myapp/images/img7.png" />
+          <div class="content">
+            <div class="title">Landmark</div>
+            <div class="des">Sydney Opera House</div>
+          </div>
+        </div>
+      </div>
+      <div class="arrows">
+        <button id="prev"><</button>
+        <button id="next">></button>
+      </div>
+      <div class="time"></div>
+    </div>
+    <script>
+      let nextDom = document.getElementById("next");
+      let prevDom = document.getElementById("prev");
+      let carousalDom = document.querySelector(".carousal");
+      let listItemDom = document.querySelector(".carousal .list");
+      let thumbnailDom = document.querySelector(".carousal .thumbnail");
+
+      nextDom.onclick = function () {
+        showSlider("next");
+      };
+      prevDom.onclick = function () {
+        showSlider("prev");
+      };
+      let timeRunning = 3000;
+      let TimeAutoNext = 7000;
+      let runTimeOut;
+      let runAutoRun = setTimeout(() => {
+        nextDom.click();
+      }, TimeAutoNext);
+      function showSlider(type) {
+        let itemSlider = document.querySelectorAll(".carousal .list .item");
+        let itemThumbnail = document.querySelectorAll(
+          ".carousal .thumbnail .item"
+        );
+
+        if (type === "next") {
+          listItemDom.appendChild(itemSlider[0]);
+          thumbnailDom.appendChild(itemThumbnail[0]);
+          carousalDom.classList.add("next");
+        } else {
+          let positionLastItem = itemSlider.length - 1;
+          listItemDom.prepend(itemSlider[positionLastItem]);
+          thumbnailDom.prepend(itemThumbnail[positionLastItem]);
+          carousalDom.classList.add("prev");
+        }
+        clearTimeout(runTimeOut);
+        runTimeOut = setTimeout(() => {
+          carousalDom.classList.remove("next");
+          carousalDom.classList.remove("prev");
+        }, timeRunning);
+
+        clearTimeout(runAutoRun);
+        runAutoRun = setTimeout(() => {
+          nextDom.click();
+        }, TimeAutoNext);
+      }
+    </script>
+  </body>
+</html>
