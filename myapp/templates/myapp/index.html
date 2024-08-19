@@ -24,8 +24,8 @@
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: repeat(3, 1fr);
-        row-gap: 2px;
-        column-gap: 5.5px;
+        row-gap: 7px;
+        column-gap: 12.5px;
       }
 
       .container {
@@ -40,7 +40,7 @@
         display: block;
         background-color: #007bff;
         color: black;
-        padding: 10px 20px;
+        padding: 10px 20px; 
         border: none;
         text-decoration: none;
         border-radius: 12px;
@@ -128,7 +128,6 @@
         >
       </div>
       <div class="desk2">
-        <h1 id="solv" style="color: yellow; font-size: 27px;">🧩 SOLVE ME 🧩</h1>
         {% if flag %}
         <div class="grid">
           {% if img1 != "" %}
@@ -141,7 +140,6 @@
           <a href="{% url 'second' %}" class="grid-item"
             ><img src="{{ img2 }}" class="image"
           /></a>
-
           {% else %}
           <div class="grid-item" style="border: none"></div>
           {% endif %} {% if img3 != "" %}
