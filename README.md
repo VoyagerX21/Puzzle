@@ -29,9 +29,11 @@ Whether you're looking for a quick mental workout or just some casual fun, this 
 
 ## 📷 Screenshots
 
-_Add screenshots of your game here._
-
----
+<div style="display: flex; justify-content: space-between; gap: 10px;">
+  <img src="https://github.com/VoyagerX21/Puzzle/blob/master/media/myapp/images/Screenshot%20(10).png" alt="Screenshot 1" style="height: 200px; width: auto; flex: 1; object-fit: cover;">
+  <img src="https://github.com/VoyagerX21/Puzzle/blob/master/media/myapp/images/Screenshot%20(11).png" alt="Screenshot 2" style="height: 200px; width: auto; flex: 1; object-fit: cover;">
+  <img src="https://github.com/VoyagerX21/Puzzle/blob/master/media/myapp/images/Screenshot%20(9).png" alt="Screenshot 3" style="height: 200px; width: auto; flex: 1; object-fit: cover;">
+</div>
 
 ## 🔧 Installation
 
