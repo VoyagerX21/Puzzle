@@ -29,10 +29,10 @@ Whether you're looking for a quick mental workout or just some casual fun, this 
 
 ## 📷 Screenshots
 
-<div style="display: flex; justify-content: space-between; gap: 10px;">
-  <img src="https://github.com/VoyagerX21/Puzzle/blob/master/media/myapp/images/Screenshot%20(10).png" alt="Screenshot 1" style="height: 200px; width: auto; flex: 1; object-fit: cover;">
-  <img src="https://github.com/VoyagerX21/Puzzle/blob/master/media/myapp/images/Screenshot%20(11).png" alt="Screenshot 2" style="height: 200px; width: auto; flex: 1; object-fit: cover;">
-  <img src="https://github.com/VoyagerX21/Puzzle/blob/master/media/myapp/images/Screenshot%20(9).png" alt="Screenshot 3" style="height: 200px; width: auto; flex: 1; object-fit: cover;">
+<div style="display: flex; gap: 10px; justify-content: center;">
+  <img src="https://drive.google.com/file/d/11B9knSENfBIQlxOh0_BCny2uLd7Ni6w5/view?usp=sharing" alt="Screenshot 1" style="height: 200px; width: 100%; max-width: 33%; object-fit: cover;">
+  <img src="https://drive.google.com/file/d/1TXtWRmr5PX9QiZzl8eUgqCzmdJ3XoCfs/view?usp=sharing" alt="Screenshot 2" style="height: 200px; width: 100%; max-width: 33%; object-fit: cover;">
+  <img src="https://drive.google.com/file/d/14szxqVQdMSMe4Tw89QCmg1r0hN4DioS_/view?usp=sharing" alt="Screenshot 3" style="height: 200px; width: 100%; max-width: 33%; object-fit: cover;">
 </div>
 
 ## 🔧 Installation
