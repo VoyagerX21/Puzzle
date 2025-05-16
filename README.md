@@ -29,10 +29,10 @@ Whether you're looking for a quick mental workout or just some casual fun, this 
 
 ## 📷 Screenshots
 
-<div style="display: flex; flex-direction: row; gap: 10px; justify-content: center;">
-    <img src="https://ik.imagekit.io/lidyx2zxm/Screenshot%20(9).png?updatedAt=1747384593677" alt="Screenshot 1" style="height: 200px; width: 100%; max-width: 33%; object-fit: cover;">
-    <img src="https://ik.imagekit.io/lidyx2zxm/Screenshot%20(11).png?updatedAt=1747384593108" alt="Screenshot 2" style="height: 200px; width: 100%; max-width: 33%; object-fit: cover;">
-    <img src="https://ik.imagekit.io/lidyx2zxm/Screenshot%20(10).png?updatedAt=1747384593106" alt="Screenshot 3" style="height: 200px; width: 100%; max-width: 33%; object-fit: cover;">
+<div style="display: flex; flex-direction: row; justify-content: space-between; gap: 15px; margin: 20px 0;">
+    <img src="https://ik.imagekit.io/lidyx2zxm/Screenshot%20(9).png?updatedAt=1747384593677" alt="Screenshot 1" style="height: auto; width: 32%;">
+    <img src="https://ik.imagekit.io/lidyx2zxm/Screenshot%20(11).png?updatedAt=1747384593108" alt="Screenshot 2" style="height: auto; width: 32%;">
+    <img src="https://ik.imagekit.io/lidyx2zxm/Screenshot%20(10).png?updatedAt=1747384593106" alt="Screenshot 3" style="height: auto; width: 32%;">
 </div>
 
 
