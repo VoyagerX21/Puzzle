@@ -30,15 +30,9 @@ Whether you're looking for a quick mental workout or just some casual fun, this 
 ## 📷 Screenshots
 
 <div style="display: flex; gap: 10px; justify-content: center;">
-  <a href="https://ik.imagekit.io/lidyx2zxm/Screenshot%20(9).png?updatedAt=1747384593677" target="_blank">
     <img src="https://ik.imagekit.io/lidyx2zxm/Screenshot%20(9).png?updatedAt=1747384593677" alt="Screenshot 1" style="height: 200px; width: 100%; max-width: 33%; object-fit: contain;">
-  </a>
-  <a href="https://ik.imagekit.io/lidyx2zxm/Screenshot%20(11).png?updatedAt=1747384593108" target="_blank">
     <img src="https://ik.imagekit.io/lidyx2zxm/Screenshot%20(11).png?updatedAt=1747384593108" alt="Screenshot 2" style="height: 200px; width: 100%; max-width: 33%; object-fit: contain;">
-  </a>
-  <a href="https://ik.imagekit.io/lidyx2zxm/Screenshot%20(10).png?updatedAt=1747384593106" target="_blank">
     <img src="https://ik.imagekit.io/lidyx2zxm/Screenshot%20(10).png?updatedAt=1747384593106" alt="Screenshot 3" style="height: 200px; width: 100%; max-width: 33%; object-fit: contain;">
-  </a>
 </div>
 
 
