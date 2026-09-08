@@ -31,7 +31,28 @@ docker login
 ```
 *(Enter your Docker Hub username and password/access token when prompted)*
 
-### 1.2 Build the Docker Image
+### 1.2 Using the Makefile (Quick Shortcuts)
+
+You can use the provided `Makefile` to quickly build, push, and test:
+
+```bash
+# Build Docker image
+make build
+
+# Build and push to Docker Hub
+make push
+
+# Run locally on port 8080
+make run
+
+# Stop local container
+make stop
+
+# View live logs
+make logs
+```
+
+### 1.3 Manual Build & Push (Alternative)
 
 Replace `<your-dockerhub-username>` with your actual Docker Hub username:
 
