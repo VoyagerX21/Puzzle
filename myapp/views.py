@@ -1,292 +1,252 @@
-from django.shortcuts import render
-from random import shuffle
-import os
-import shutil
-from PIL import Image
+import json
+import time
+from django.shortcuts import render, redirect
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.views.decorators.http import require_POST, require_GET, require_http_methods
+from django.views.decorators.csrf import ensure_csrf_cookie
 
-# globals
-dic = {0: '', 1: r'media\myapp\main\1.png', 2: r'media\myapp\main\2.png', 3: r'media\myapp\main\3.png', 4: r'media\myapp\main\4.png', 5: r'media\myapp\main\5.png', 6: r'media\myapp\main\6.png', 7: r'media\myapp\main\7.png', 8: r'media\myapp\main\8.png', 9: r'media\myapp\main\9.png'}
-global main
-global mat
-global count
+from .utils import (
+    PRESETS,
+    PRESET_DICT,
+    BLANK_TILE,
+    SOLVED_BOARD,
+    get_preset_by_id,
+    is_solvable,
+    can_move,
+    execute_move,
+    is_solved,
+    generate_scrambled_board,
+    process_and_save_upload,
+)
+from .forms import PhotoUploadForm
 
-def make():
-    mn = [1,2,3,4,5,6,7,8,9]
-    shuffle(mn)
-    res = []
-    global main
-    main = mn
-    for i in range(1,4):
-        res.append(mn[3*(i-1):i*3])
 
-    global mat
-    mat = res
-
-def mkcontext(flag=True):
-    context = {
-        'flag': True,
-        'img1': dic[main[0] if main[0] != 9 else 0],
-        'img2': dic[main[1] if main[1] != 9 else 0],
-        'img3': dic[main[2] if main[2] != 9 else 0],
-        'img4': dic[main[3] if main[3] != 9 else 0],
-        'img5': dic[main[4] if main[4] != 9 else 0],
-        'img6': dic[main[5] if main[5] != 9 else 0],
-        'img7': dic[main[6] if main[6] != 9 else 0],
-        'img8': dic[main[7] if main[7] != 9 else 0],
-        'img9': dic[main[8] if main[8] != 9 else 0]
-    }
-    return context
-
-def gather(box):
-    global main
-    res = []
-    for i in range(3):
-        for j in range(3):
-            res.append(box[i][j])
+def get_or_init_game_state(request):
+    """
+    Retrieve current game state from Django session or initialize fresh state.
+    Guarantees full isolation between different user sessions without globals.
+    """
+    game = request.session.get('puzzle_game')
     
-    main = res
+    if not game or 'board' not in game:
+        default_preset = PRESETS[0]
+        initial_board = generate_scrambled_board('medium')
+        game = {
+            'board': initial_board,
+            'moves': 0,
+            'is_solved': False,
+            'difficulty': 'medium',
+            'image_id': default_preset['id'],
+            'image_url': default_preset['image_url'],
+            'image_title': default_preset['title'],
+            'is_custom': False,
+            'start_time': int(time.time()),
+        }
+        request.session['puzzle_game'] = game
+        request.session.modified = True
 
-def availcell(row, column):
-    if row==0 and column==0:
-        return ['01','10']
-    if row==0 and column==1:
-        return ['00','02','11']
-    if row==0 and column==2:
-        return ['01','12']
-    if row==1 and column==0:
-        return ['00','11','20']
-    if row==1 and column==1:
-        return ['01','10','12','21']
-    if row==1 and column==2:
-        return ['02','11','22']
-    if row==2 and column==0:
-        return ['10','21']
-    if row==2 and column==1:
-        return ['11','20','22']
-    if row==2 and column==2:
-        return ['12','21']
+    return game
 
-def getidx(box, val):
-    for i in range(3):
-        for j in range(3):
-            if box[i][j] == val:
-                return i, j
 
-def getInvCount(arr):
-    inv_count = 0
-    empty_value = 9
-    for i in range(0, 9):
-        for j in range(i + 1, 9):
-            if arr[j] != empty_value and arr[i] != empty_value and arr[i] > arr[j]:
-                inv_count += 1
-    return inv_count
-
-def isSolvable(puzzle) :
-    inv_count = getInvCount([j for sub in puzzle for j in sub])
-    return (inv_count % 2 == 0)
-
+@ensure_csrf_cookie
 def index(request):
-    make()
-    global mat
-    while not isSolvable(mat):
-        make()
-    global count
-    count = 0
-    return render(request, 'myapp/index.html', mkcontext())
+    """
+    Main Game View:
+    Renders the modern SPA-like puzzle dashboard with initial state pre-populated.
+    """
+    game = get_or_init_game_state(request)
+    context = {
+        'game_state': game,
+        'game_state_json': json.dumps(game),
+        'presets': PRESETS,
+        'presets_json': json.dumps(PRESETS),
+    }
+    return render(request, 'myapp/index.html', context)
 
-def first(request):
-    global mat
-    i, j = getidx(mat, 9)
-    avail = availcell(i, j)
-    if '00' in avail:
-        mat[0][0], mat[i][j] = mat[i][j], mat[0][0]
-        global count
-        count += 1
-        gather(mat)
 
-    return render(request, 'myapp/index.html', mkcontext())
-
-def second(request):
-    global mat
-    i, j = getidx(mat, 9)
-    avail = availcell(i, j)
-    if '01' in avail:
-        mat[0][1], mat[i][j] = mat[i][j], mat[0][1]
-        global count
-        count += 1
-        gather(mat)
-
-    return render(request, 'myapp/index.html', mkcontext())
-
-def third(request):
-    global mat
-    i, j = getidx(mat, 9)
-    avail = availcell(i, j)
-    if '02' in avail:
-        mat[0][2], mat[i][j] = mat[i][j], mat[0][2]
-        global count
-        count += 1
-        gather(mat)
-
-    return render(request, 'myapp/index.html', mkcontext())
-
-def fourth(request):
-    global mat
-    i, j = getidx(mat, 9)
-    avail = availcell(i, j)
-    if '10' in avail:
-        mat[1][0], mat[i][j] = mat[i][j], mat[1][0]
-        global count
-        count += 1
-        gather(mat)
-
-    return render(request, 'myapp/index.html', mkcontext())
-
-def fifth(request):
-    global mat
-    i, j = getidx(mat, 9)
-    avail = availcell(i, j)
-    if '11' in avail:
-        mat[1][1], mat[i][j] = mat[i][j], mat[1][1]
-        global count
-        count += 1
-        gather(mat)
-
-    return render(request, 'myapp/index.html', mkcontext())
-
-def sixth(request):
-    global mat
-    i, j = getidx(mat, 9)
-    avail = availcell(i, j)
-    if '12' in avail:
-        mat[1][2], mat[i][j] = mat[i][j], mat[1][2]
-        global count
-        count += 1
-        gather(mat)
-
-    return render(request, 'myapp/index.html', mkcontext())
-
-def seventh(request):
-    global mat
-    i, j = getidx(mat, 9)
-    avail = availcell(i, j)
-    if '20' in avail:
-        mat[2][0], mat[i][j] = mat[i][j], mat[2][0]
-        global count
-        count += 1
-        gather(mat)
-
-    return render(request, 'myapp/index.html', mkcontext())
-
-def eighth(request):
-    global mat
-    i, j = getidx(mat, 9)
-    avail = availcell(i, j)
-    if '21' in avail:
-        mat[2][1], mat[i][j] = mat[i][j], mat[2][1]
-        global count
-        count += 1
-        gather(mat)
-
-    return render(request, 'myapp/index.html', mkcontext())
-
-def ninth(request):
-    global mat
-    i, j = getidx(mat, 9)
-    avail = availcell(i, j)
-    if '22' in avail:
-        mat[2][2], mat[i][j] = mat[i][j], mat[2][2]
-        global count
-        count += 1
-        gather(mat)
-
-    c = mkcontext()
-    if main == sorted(main):
-        c['img9'] = r'media\myapp\images\9.png'
-        c['steps'] = count
-        c['flag'] = False
-
-    return render(request, 'myapp/index.html', c)
-
-def reset(request):
-    return render()
-
+@ensure_csrf_cookie
 def choices(request):
-    return render(request, 'myapp/choice.html')
+    """
+    Gallery / Image Picker View:
+    Displays catalog of all 16 presets + custom upload trigger.
+    """
+    game = get_or_init_game_state(request)
+    context = {
+        'presets': PRESETS,
+        'current_image_id': game.get('image_id'),
+        'current_image_url': game.get('image_url'),
+    }
+    return render(request, 'myapp/choice.html', context)
 
-def clear(path: str):
-    for filename in os.listdir(path):
-        filepath = os.path.join(path, filename)
-        os.unlink(filepath)
 
-def crop_image_into_9_pieces(image_path, output_folder):
-    img = Image.open(image_path)
+@require_GET
+def api_game_state(request):
+    """Return current game state as JSON."""
+    game = get_or_init_game_state(request)
+    return JsonResponse({'success': True, 'state': game})
 
-    width, height = img.size
 
-    piece_width = width // 3
-    piece_height = height // 3
+@require_POST
+def api_move(request):
+    """
+    Execute a tile move:
+    Validates tile adjacency to blank space, updates board & moves in session,
+    and returns updated state.
+    """
+    game = get_or_init_game_state(request)
+    
+    # Parse tile_index from JSON payload or form data
+    tile_index = None
+    if request.content_type == 'application/json':
+        try:
+            body = json.loads(request.body)
+            tile_index = body.get('tile_index')
+        except (ValueError, TypeError):
+            return HttpResponseBadRequest("Invalid JSON body")
+    else:
+        tile_index = request.POST.get('tile_index')
 
-    k = 1
-    for i in range(3):
-        for j in range(3):
-            left = j * piece_width
-            upper = i * piece_height
-            right = (j + 1) * piece_width
-            lower = (i + 1) * piece_height
+    if tile_index is None:
+        return JsonResponse({'success': False, 'error': 'Missing tile_index'}, status=400)
 
-            piece = img.crop((left, upper, right, lower))
+    try:
+        tile_index = int(tile_index)
+    except ValueError:
+        return JsonResponse({'success': False, 'error': 'tile_index must be an integer'}, status=400)
 
-            piece.save(f"{output_folder}/{k}.png")
-            k += 1
+    board = game.get('board', list(SOLVED_BOARD))
+    if not can_move(board, tile_index):
+        return JsonResponse({
+            'success': False,
+            'is_valid_move': False,
+            'error': 'Tile cannot be moved into blank position.',
+            'board': board,
+            'moves': game.get('moves', 0),
+            'is_solved': game.get('is_solved', False),
+        })
 
-path = r"media\myapp\present"
-path2 = r"media\myapp\main"
+    new_board, valid = execute_move(board, tile_index)
+    new_moves = game.get('moves', 0) + 1
+    won = is_solved(new_board)
 
-def store(id: int):
-    if id == 1:
-        shutil.copy(r'media\myapp\images\img1.png', r'media\myapp\present\img.png')
-    elif id == 2:
-        shutil.copy(r'media\myapp\images\img2.png', r'media\myapp\present\img.png')
-    elif id == 3:
-        shutil.copy(r'media\myapp\images\img3.png', r'media\myapp\present\img.png')
-    elif id == 4:
-        shutil.copy(r'media\myapp\images\img4.png', r'media\myapp\present\img.png')
-    elif id == 5:
-        shutil.copy(r'media\myapp\images\img5.png', r'media\myapp\present\img.png')
-    elif id == 6:
-        shutil.copy(r'media\myapp\images\img6.png', r'media\myapp\present\img.png')
-    elif id == 7:
-        shutil.copy(r'media\myapp\images\img7.png', r'media\myapp\present\img.png')
-    elif id == 8:
-        shutil.copy(r'media\myapp\images\img8.png', r'media\myapp\present\img.png')
-    elif id == 9:
-        shutil.copy(r'media\myapp\images\img9.png', r'media\myapp\present\img.png')
-    elif id == 10:
-        shutil.copy(r'media\myapp\images\img10.png', r'media\myapp\present\img.png')
-    elif id == 11:
-        shutil.copy(r'media\myapp\images\img11.png', r'media\myapp\present\img.png')
-    elif id == 12:
-        shutil.copy(r'media\myapp\images\img12.png', r'media\myapp\present\img.png')
-    elif id == 13:
-        shutil.copy(r'media\myapp\images\img13.png', r'media\myapp\present\img.png')
-    elif id == 14:
-        shutil.copy(r'media\myapp\images\img14.png', r'media\myapp\present\img.png')
-    elif id == 15:
-        shutil.copy(r'media\myapp\images\img15.png', r'media\myapp\present\img.png')
-    elif id == 16:
-        shutil.copy(r'media\myapp\images\img16.png', r'media\myapp\present\img.png')
+    game['board'] = new_board
+    game['moves'] = new_moves
+    game['is_solved'] = won
 
-def taken(request):
-    clear(path)
-    # store the image received in the path directory and store the cropped images in the path2 folder
-    store(int(request.POST.get('id')))
-    crop_image_into_9_pieces(r'media\myapp\present\img.png', path2)
-    # After that
-    make()
-    global mat
-    while not isSolvable(mat):
-        make()
-    global count
-    count = 0
-    return index(request)
+    request.session['puzzle_game'] = game
+    request.session.modified = True
+
+    return JsonResponse({
+        'success': True,
+        'is_valid_move': True,
+        'board': new_board,
+        'moves': new_moves,
+        'is_solved': won,
+    })
+
+
+@require_POST
+def api_shuffle(request):
+    """
+    Scramble the board with a guaranteed solvable configuration,
+    reset move counter and timer.
+    """
+    game = get_or_init_game_state(request)
+    difficulty = request.POST.get('difficulty', game.get('difficulty', 'medium'))
+
+    new_board = generate_scrambled_board(difficulty)
+    game['board'] = new_board
+    game['moves'] = 0
+    game['is_solved'] = False
+    game['difficulty'] = difficulty
+    game['start_time'] = int(time.time())
+
+    request.session['puzzle_game'] = game
+    request.session.modified = True
+
+    return JsonResponse({
+        'success': True,
+        'board': new_board,
+        'moves': 0,
+        'is_solved': False,
+        'difficulty': difficulty,
+    })
+
+
+@require_POST
+def api_select_preset(request):
+    """
+    Select a preset image by ID, scramble new board, and update session.
+    """
+    try:
+        preset_id = int(request.POST.get('id', 7))
+    except (ValueError, TypeError):
+        preset_id = 7
+
+    preset = get_preset_by_id(preset_id)
+    game = get_or_init_game_state(request)
+
+    game['image_id'] = preset['id']
+    game['image_url'] = preset['image_url']
+    game['image_title'] = preset['title']
+    game['is_custom'] = False
+    game['board'] = generate_scrambled_board(game.get('difficulty', 'medium'))
+    game['moves'] = 0
+    game['is_solved'] = False
+    game['start_time'] = int(time.time())
+
+    request.session['puzzle_game'] = game
+    request.session.modified = True
+
+    # If it was an AJAX call, return JSON, else redirect to main game
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.content_type == 'application/json':
+        return JsonResponse({'success': True, 'state': game})
+
+    return redirect('index')
+
+
+@require_POST
+def api_upload_photo(request):
+    """
+    Handle user custom photo upload:
+    Validates file format/size with Django Form, processes with Pillow,
+    and sets as active game image.
+    """
+    form = PhotoUploadForm(request.POST, request.FILES)
+    if not form.is_valid():
+        error_msg = next(iter(form.errors.values()))[0] if form.errors else "Invalid upload."
+        return JsonResponse({'success': False, 'error': error_msg}, status=400)
+
+    photo = form.cleaned_data['photo']
+    try:
+        result = process_and_save_upload(photo, session_key=request.session.session_key)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': f"Failed to process image: {str(e)}"}, status=500)
+
+    game = get_or_init_game_state(request)
+    game['image_id'] = None
+    game['image_url'] = result['image_url']
+    game['image_title'] = result['title']
+    game['is_custom'] = True
+    game['board'] = generate_scrambled_board(game.get('difficulty', 'medium'))
+    game['moves'] = 0
+    game['is_solved'] = False
+    game['start_time'] = int(time.time())
+
+    request.session['puzzle_game'] = game
+    request.session.modified = True
+
+    return JsonResponse({
+        'success': True,
+        'image_url': result['image_url'],
+        'title': result['title'],
+        'board': game['board'],
+        'moves': 0,
+        'is_solved': False,
+    })
+
+
+@require_POST
+def api_reset(request):
+    """Reset the current game board to a freshly shuffled solvable state."""
+    return api_shuffle(request)

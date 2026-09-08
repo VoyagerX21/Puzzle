@@ -1,0 +1,24 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: puzzle-game:latest
+    container_name: puzzle_web
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - DEBUG=False
+      - ALLOWED_HOSTS=*
+      - SECRET_KEY=django-prod-secret-change-if-needed-in-production
+    volumes:
+      - puzzle_media:/app/media
+      - puzzle_db:/app/data
+
+volumes:
+  puzzle_media:
+    driver: local
+  puzzle_db:
+    driver: local

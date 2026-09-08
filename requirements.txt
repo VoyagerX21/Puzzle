@@ -1,6 +1,8 @@
-﻿asgiref==3.8.1
+asgiref==3.8.1
 Django==5.0.6
 numpy==2.0.0
 sqlparse==0.5.0
 tzdata==2024.1
 pillow==11.2.1
+gunicorn==22.0.0
+whitenoise==6.7.0

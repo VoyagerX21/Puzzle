@@ -1,346 +1,169 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <style>
-      h1 {
-        color: white;
-        text-align: center;
-        font-style: bold;
-        margin-top: 0px;
-        margin-bottom: 2px;
-      }
-
-      body {
-        background-color: black;
-      }
-
-      .grid {
-        margin-left: 1%;
-        margin-right: 1%;
-        margin-top: 0 px;
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: repeat(3, 1fr);
-        row-gap: 7px;
-        column-gap: 12.5px;
-      }
-
-      .container {
-        display: block;
-        text-align: center;
-        margin-right: 5%;
-        margin-left: 5%;
-      }
-
-      .reset-button {
-        text-wrap: nowrap;
-        display: block;
-        background-color: #007bff;
-        color: black;
-        padding: 10px 20px; 
-        border: none;
-        text-decoration: none;
-        border-radius: 12px;
-        font-weight: bold;
-        margin-left: 25%;
-        margin-right: 25%;
-        margin-bottom: 0px;
-      }
-
-      .reset-button:hover {
-        background-color: #408fe4;
-      }
-
-      #mainpic {
-        display: inline-block;
-        border: 2px solid white;
-        width: 80%;
-        height: auto;
-        aspect-ratio: 2/1.3;
-        margin-bottom: 15px;
-        border-radius: 15px;
-      }
-
-      .grid-item:hover {
-        opacity: 0.8;
-      }
-
-      .image {
-        width: 100%;
-        height: auto;
-        aspect-ratio: 1/1;
-        border: 1px solid white;
-      }
-      #try {
-        margin-bottom: 35px;
-      }
-
-      canvas {
-        overflow-y: hidden;
-        overflow-x: hidden;
-        width: 100%;
-        margin: 0;
-        opacity: 10px;
-      }
-
-      .flx {
-        margin-top: 5px;
-        display: flex;
-        justify-content: center;
-        margin-left: 15%;
-        margin-right: 15%;
-      }
-      #solv {
-        margin-bottom: 20px;
-      }
-
-      @media (min-width: 900px) {
-        .desktop {
-          display: flex;
-          justify-content: center;
-          margin-top: 10vh;
-        }
-
-        .container,
-        .desk2 {
-          flex: 1;
-          margin: 0 20px;
-        }
-
-        .image {
-          aspect-ratio: 2/1.5;
-        }
-
-        #solv {
-          margin-bottom: 0px;
-        }
-
-        .reset-button {
-          font-size: 1.2rem;
-          padding: 12px 24px;
-          margin-left: 15%;
-          margin-right: 15%;
-          width: 70%;
-          text-align: center;
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="desktop">
-      <div class="container">
-        <h1>Visual Hint💡</h1>
-        <img id="mainpic" src="/media/myapp/present/img.png" alt="mainpic" />
-        <a href="{% url 'choices' %}" id="try" class="reset-button"
-          >Try a Different Image? 🤔</a
-        >
-      </div>
-      <div class="desk2">
-        {% if flag %}
-        <div class="grid">
-          {% if img1 != "" %}
-          <a href="{% url 'first' %}" class="grid-item" method="post"
-            ><img src="{{ img1 }}" class="image" />
-          </a>
-          {% else %}
-          <div class="grid-item" style="border: none"></div>
-          {% endif %} {% if img2 != "" %}
-          <a href="{% url 'second' %}" class="grid-item"
-            ><img src="{{ img2 }}" class="image"
-          /></a>
-          {% else %}
-          <div class="grid-item" style="border: none"></div>
-          {% endif %} {% if img3 != "" %}
-          <a href="{% url 'third' %}" class="grid-item"
-            ><img src="{{ img3 }}" class="image"
-          /></a>
-          {% else %}
-          <div class="grid-item" style="border: none"></div>
-          {% endif %} {% if img4 != "" %}
-          <a href="{% url 'fourth' %}" class="grid-item"
-            ><img src="{{ img4 }}" class="image"
-          /></a>
-          {% else %}
-          <div class="grid-item" style="border: none"></div>
-          {% endif %} {% if img5 != "" %}
-          <a href="{% url 'fifth' %}" class="grid-item"
-            ><img src="{{ img5 }}" class="image"
-          /></a>
-          {% else %}
-          <div class="grid-item" style="border: none"></div>
-          {% endif %} {% if img6 != "" %}
-          <a href="{% url 'sixth' %}" class="grid-item"
-            ><img src="{{ img6 }}" class="image"
-          /></a>
-          {% else %}
-          <div class="grid-item" style="border: none"></div>
-          {% endif %} {% if img7 != "" %}
-          <a href="{% url 'seventh' %}" class="grid-item"
-            ><img src="{{ img7 }}" class="image"
-          /></a>
-          {% else %}
-          <div class="grid-item" style="border: none"></div>
-          {% endif %} {% if img8 != "" %}
-          <a href="{% url 'eighth' %}" class="grid-item"
-            ><img src="{{ img8 }}" class="image"
-          /></a>
-          {% else %}
-          <div class="grid-item" style="border: none"></div>
-          {% endif %} {% if img9 != "" %}
-          <a href="{% url 'ninth' %}" class="grid-item"
-            ><img src="{{ img9 }}" class="image"
-          /></a>
-          {% else %}
-          <div class="grid-item" style="border: none"></div>
-          {% endif %}
-        </div>
-        {% else %}
-        <div class="grid">
-          <div class="grid-item">
-            <img src="media\myapp\main\1.png" class="image" />
-          </div>
-          <div class="grid-item">
-            <img src="media\myapp\main\2.png" class="image" />
-          </div>
-          <div class="grid-item">
-            <img src="media\myapp\main\3.png" class="image" />
-          </div>
-          <div class="grid-item">
-            <img src="media\myapp\main\4.png" class="image" />
-          </div>
-          <div class="grid-item">
-            <img src="media\myapp\main\5.png" class="image" />
-          </div>
-          <div class="grid-item">
-            <img src="media\myapp\main\6.png" class="image" />
-          </div>
-          <div class="grid-item">
-            <img src="media\myapp\main\7.png" class="image" />
-          </div>
-          <div class="grid-item">
-            <img src="media\myapp\main\8.png" class="image" />
-          </div>
-          <div class="grid-item">
-            <img src="media\myapp\main\9.png" class="image" />
-          </div>
-        </div>
-        {% endif %}
-        <div class="flx">
-          <a href="/" id="resetb" class="reset-button">Reset ↻</a>
-          {% if steps %}
-          <a class="reset-button" id="countb">Steps : {{ steps }}</a>
-          {% endif %}
-        </div>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>8-Puzzle | Interactive Sliding Puzzle Game</title>
+  <meta name="description" content="A classic 8-puzzle sliding image game built with Python and Django. Solve classic landmark puzzles or upload your own custom photo." />
+  
+  <link rel="stylesheet" href="{% static 'myapp/css/style.css' %}" />
+</head>
+<body>
+  <!-- Clean Classic Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <a href="{% url 'index' %}" class="brand-link">
+        <span class="brand-name">8-Puzzle</span>
+        <span class="brand-tag">Classic Edition</span>
+      </a>
+      <div class="nav-group">
+        <button id="btn-theme" class="btn btn-outline">Dark Mode</button>
+        <button id="btn-sound" class="btn btn-outline">Sound: Off</button>
+        <button id="btn-upload-photo" class="btn btn-primary">Upload Photo</button>
+        <a href="{% url 'choices' %}" class="btn btn-outline">Presets Gallery</a>
       </div>
     </div>
-    <script>
-      let W = window.innerWidth;
-      let H = window.innerHeight;
-      const canvas = document.getElementById("canvas");
-      const context = canvas.getContext("2d");
-      const maxConfettis = 150;
-      const particles = [];
+  </header>
 
-      const possibleColors = [
-        "DodgerBlue",
-        "OliveDrab",
-        "Gold",
-        "Pink",
-        "SlateBlue",
-        "LightBlue",
-        "Gold",
-        "Violet",
-        "PaleGreen",
-        "SteelBlue",
-        "SandyBrown",
-        "Chocolate",
-        "Crimson",
-      ];
+  <!-- Open Full-Screen Main Workspace -->
+  <main class="main-container">
+    <div class="puzzle-layout">
+      
+      <!-- Left Panel: Target Reference & Stats -->
+      <aside class="info-section">
+        <div class="section-header">
+          <h2 class="section-title">Target Image</h2>
+          <span id="difficulty-badge" class="badge-tag">MEDIUM</span>
+        </div>
 
-      function randomFromTo(from, to) {
-        return Math.floor(Math.random() * (to - from + 1) + from);
-      }
+        <div class="hint-display">
+          <div class="hint-image-frame" id="hint-box">
+            <img id="hint-img" class="hint-image" src="{{ game_state.image_url }}" alt="Target image" />
+          </div>
+          <div class="hint-meta">
+            <span id="hint-title" class="hint-label">{{ game_state.image_title }}</span>
+          </div>
+        </div>
 
-      function confettiParticle() {
-        this.x = Math.random() * W; // x
-        this.y = Math.random() * H - H; // y
-        this.r = randomFromTo(11, 33); // radius
-        this.d = Math.random() * maxConfettis + 11;
-        this.color =
-          possibleColors[Math.floor(Math.random() * possibleColors.length)];
-        this.tilt = Math.floor(Math.random() * 33) - 11;
-        this.tiltAngleIncremental = Math.random() * 0.07 + 0.05;
-        this.tiltAngle = 0;
+        <!-- Clean Open Stats Row -->
+        <div class="stats-row">
+          <div class="stat-cell">
+            <span class="stat-title">Moves</span>
+            <span id="stat-moves" class="stat-num">{{ game_state.moves }}</span>
+          </div>
+          <div class="stat-cell">
+            <span class="stat-title">Elapsed</span>
+            <span id="stat-timer" class="stat-num">00:00</span>
+          </div>
+          <div class="stat-cell">
+            <span class="stat-title">Grid</span>
+            <span class="stat-num">3 × 3</span>
+          </div>
+        </div>
 
-        this.draw = function () {
-          context.beginPath();
-          context.lineWidth = this.r / 2;
-          context.strokeStyle = this.color;
-          context.moveTo(this.x + this.tilt + this.r / 3, this.y);
-          context.lineTo(this.x + this.tilt, this.y + this.tilt + this.r / 5);
-          return context.stroke();
-        };
-      }
+        <!-- Assistance Controls -->
+        <div class="button-grid">
+          <button id="btn-hint" class="btn btn-outline">Hold to Peek</button>
+          <button id="btn-numbers" class="btn btn-outline">Show Numbers</button>
+        </div>
 
-      function Draw() {
-        const results = [];
+        <!-- Scramble Difficulty -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 0.5rem;">
+          <span style="font-size: 0.875rem; color: var(--text-secondary); font-weight: 500;">Scramble Level:</span>
+          <select id="difficulty-select" class="select-input">
+            <option value="easy">Easy (20 moves)</option>
+            <option value="medium" selected>Medium (45 moves)</option>
+            <option value="hard">Hard (90 moves)</option>
+          </select>
+        </div>
+      </aside>
 
-        // Magical recursive functional love
-        requestAnimationFrame(Draw);
+      <!-- Right Panel: Wide Interactive Puzzle Workspace -->
+      <section class="game-workspace">
+        <div class="board-wrapper" id="board-container">
+          <div id="ghost-overlay" class="ghost-hint"></div>
+          <div id="puzzle-board" class="puzzle-grid">
+            <!-- Tiles rendered dynamically via game.js -->
+          </div>
+        </div>
 
-        context.clearRect(0, 0, W, window.innerHeight);
+        <!-- Controls Toolbar -->
+        <div class="controls-bar">
+          <button id="btn-shuffle" class="btn btn-primary" style="padding: 0.7rem 1.75rem;">Shuffle Puzzle</button>
+          <a href="{% url 'choices' %}" class="btn btn-outline" style="padding: 0.7rem 1.5rem;">Choose Different Image</a>
+        </div>
 
-        for (var i = 0; i < maxConfettis; i++) {
-          results.push(particles[i].draw());
-        }
+        <!-- Keyboard Controls Help -->
+        <div class="controls-help">
+          <span>Controls: Click adjacent tiles to slide, or use </span>
+          <span class="kbd-badge">W A S D</span>
+          <span> / </span>
+          <span class="kbd-badge">Arrow Keys</span>
+          <span> / Touch swipe on mobile</span>
+        </div>
+      </section>
 
-        let particle = {};
-        let remainingFlakes = 0;
-        for (var i = 0; i < maxConfettis; i++) {
-          particle = particles[i];
+    </div>
+  </main>
 
-          particle.tiltAngle += particle.tiltAngleIncremental;
-          particle.y += (Math.cos(particle.d) + 3 + particle.r / 2) / 2;
-          particle.tilt = Math.sin(particle.tiltAngle - i / 3) * 15;
+  <!-- Photo Upload Modal -->
+  <div id="upload-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Upload Custom Photo</h3>
+        <button id="close-upload-modal" class="modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
 
-          if (particle.y <= H) remainingFlakes++;
+      <form id="upload-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" id="photo-input" name="photo" accept="image/png, image/jpeg, image/webp" style="display: none;" />
 
-          // If a confetti has fluttered out of view,
-          // bring it back to above the viewport and let if re-fall.
-          if (particle.x > W + 30 || particle.x < -30 || particle.y > H) {
-            particle.x = Math.random() * W;
-            particle.y = -30;
-            particle.tilt = Math.floor(Math.random() * 10) - 20;
-          }
-        }
+        <div class="dropzone-area" id="upload-dropzone">
+          <div class="dropzone-title">Click to browse or drop an image here</div>
+          <div class="dropzone-subtext">JPG, PNG, or WEBP (Max 10MB)</div>
+        </div>
 
-        return results;
-      }
+        <div class="preview-box" id="upload-preview-container">
+          <img id="upload-preview-img" src="" alt="Selected Preview" />
+        </div>
 
-      window.addEventListener(
-        "resize",
-        function () {
-          W = window.innerWidth;
-          H = window.innerHeight;
-          canvas.width = window.innerWidth;
-          canvas.height = window.innerHeight;
-        },
-        false
-      );
+        <button type="submit" id="btn-submit-upload" class="btn btn-primary" style="width: 100%; margin-top: 1rem;" disabled>
+          Create Puzzle
+        </button>
+      </form>
+    </div>
+  </div>
 
-      // Push new confetti objects to `particles[]`
-      for (var i = 0; i < maxConfettis; i++) {
-        particles.push(new confettiParticle());
-      }
+  <!-- Victory Modal -->
+  <div id="victory-modal" class="modal-overlay">
+    <div class="modal-box victory-content">
+      <h2 class="victory-title">Puzzle Solved</h2>
+      <p class="victory-sub">All tiles have been placed in their correct positions.</p>
 
-      // Initialize
-      canvas.width = W;
-      canvas.height = H;
-      Draw();
-    </script>
-  </body>
+      <div class="victory-stats">
+        <div>
+          <div class="stat-title">Total Moves</div>
+          <div id="win-moves" class="stat-num">0</div>
+        </div>
+        <div>
+          <div class="stat-title">Time Taken</div>
+          <div id="win-time" class="stat-num">00:00</div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 0.75rem; justify-content: center;">
+        <button id="win-btn-again" class="btn btn-primary">Play Again</button>
+        <a href="{% url 'choices' %}" class="btn btn-outline">Choose Next Image</a>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <script>
+    window.INITIAL_GAME_STATE = {{ game_state_json|safe }};
+  </script>
+  <script src="{% static 'myapp/js/game.js' %}"></script>
+</body>
 </html>
