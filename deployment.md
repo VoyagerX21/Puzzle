@@ -250,4 +250,29 @@ docker run -d \
    ```bash
    -e ALLOWED_HOSTS="<YOUR_VM_IP>,yourdomain.com"
    ```
-3. **Nginx Reverse Proxy & SSL (Optional)**: If you connect a domain name, you can set up Nginx with Let's Encrypt Certbot on the VM to proxy port 443 (HTTPS) to `localhost:8080`.
+3. **Nginx Reverse Proxy & SSL Configuration**:
+   When using Nginx as a reverse proxy for your domain (`bxng.khakse.dev`), configure your `/etc/nginx/sites-available/default` (or custom site file) with `client_max_body_size 25M;` and proper proxy headers:
+
+   ```nginx
+   server {
+       listen 80;
+       server_name bxng.khakse.dev;
+
+       # Max upload file size (prevents 413 Request Entity Too Large)
+       client_max_body_size 25M;
+
+       location / {
+           proxy_pass http://127.0.0.1:8080;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+           proxy_set_header X-Forwarded-Proto $scheme;
+       }
+   }
+   ```
+
+   After editing, test and reload Nginx:
+   ```bash
+   sudo nginx -t
+   sudo systemctl reload nginx
+   ```
