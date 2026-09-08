@@ -7,9 +7,9 @@ services:
     container_name: puzzle_web
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "8888:8888"
     environment:
-      - PORT=8080
+      - PORT=8888
       - DEBUG=False
       - ALLOWED_HOSTS=*
       - SECRET_KEY=django-prod-secret-change-if-needed-in-production

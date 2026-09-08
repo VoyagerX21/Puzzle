@@ -198,17 +198,38 @@
         const formData = new FormData();
         formData.append('photo', fileInput.files[0]);
 
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const res = await fetch('/api/upload-photo/', {
-          method: 'POST',
-          headers: { 'X-CSRFToken': csrfToken },
-          body: formData,
-        });
-        const data = await res.json();
-        if (data.success) {
-          window.location.href = '/';
-        } else {
-          alert(data.error || 'Upload failed');
+        try {
+          const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+          const res = await fetch('/api/upload-photo/', {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken },
+            body: formData,
+          });
+
+          if (res.status === 413) {
+            alert('Image file too large (Nginx max size exceeded). Please choose a smaller image.');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Create Puzzle & Play';
+            return;
+          }
+
+          if (res.status === 403) {
+            alert('CSRF verification failed. Please refresh the page.');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Create Puzzle & Play';
+            return;
+          }
+
+          const data = await res.json();
+          if (data && data.success) {
+            window.location.href = '/';
+          } else {
+            alert((data && data.error) || 'Upload failed');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Create Puzzle & Play';
+          }
+        } catch (e) {
+          alert('Upload failed due to network or server error.');
           submitBtn.disabled = false;
           submitBtn.textContent = 'Create Puzzle & Play';
         }

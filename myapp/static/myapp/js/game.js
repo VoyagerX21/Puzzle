@@ -660,8 +660,25 @@ class PuzzleGame {
             body: formData,
           });
 
-          const data = await response.json();
-          if (data.success) {
+          if (response.status === 413) {
+            this.showToast('Image file is too large (Nginx max size exceeded)');
+            return;
+          }
+
+          if (response.status === 403) {
+            this.showToast('CSRF verification failed. Please refresh the page.');
+            return;
+          }
+
+          let data;
+          try {
+            data = await response.json();
+          } catch (e) {
+            this.showToast('Server returned unexpected response');
+            return;
+          }
+
+          if (data && data.success) {
             this.state.image_url = data.image_url;
             this.state.image_title = data.title;
             this.state.board = data.board;
@@ -674,11 +691,11 @@ class PuzzleGame {
             if (uploadModal) uploadModal.classList.remove('active');
             this.showToast('Custom photo puzzle ready');
           } else {
-            this.showToast(data.error || 'Failed to upload image');
+            this.showToast((data && data.error) || 'Failed to upload image');
           }
         } catch (err) {
           console.error('Upload error:', err);
-          this.showToast('Upload failed');
+          this.showToast('Upload failed due to network error');
         } finally {
           if (submitBtn) {
             submitBtn.disabled = false;

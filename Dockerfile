@@ -31,8 +31,8 @@ RUN mkdir -p /app/media/uploads /app/staticfiles
 # Collect static files during image build
 RUN python manage.py collectstatic --noinput
 
-# Expose port 8080
-EXPOSE 8080
+# Expose port 8888
+EXPOSE 8888
 
 # Start Gunicorn server binding on port 8080
 CMD ["sh", "-c", "python manage.py migrate --noinput && gunicorn --bind 0.0.0.0:${PORT:-8080} --workers 3 --threads 2 --timeout 120 Puzzle.wsgi:application"]

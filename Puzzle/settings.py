@@ -15,6 +15,16 @@ DEBUG = os.environ.get('DEBUG', 'True').lower() in ('true', '1', 'yes')
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
+# CSRF Trusted Origins for reverse proxies (Nginx, Azure, custom domains)
+default_trusted_origins = 'https://*.khakse.dev,https://*.azurewebsites.net,http://localhost:8080,http://127.0.0.1:8080,http://localhost:8888,http://127.0.0.1:8888'
+csrf_origins_env = os.environ.get('CSRF_TRUSTED_ORIGINS', default_trusted_origins)
+CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in csrf_origins_env.split(',') if origin.strip()]
+
+# Reverse proxy SSL header support (when behind Nginx/Caddy terminating HTTPS)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
+
 # Application definition
 INSTALLED_APPS = [
     'myapp.apps.MyappConfig',
@@ -113,8 +123,8 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 7  # 7 days
 
-# File upload settings (Max 10 MB)
-DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
-FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
+# File upload settings (Max 25 MB)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 25 * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = 25 * 1024 * 1024
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
